@@ -25,8 +25,7 @@ import java.util.Scanner;
 public class Type1DriverDemoCRUDApplication {
 	
 	//Create an entry --- C
-	public static void createEntry(Statement st) throws Exception {
-		Scanner sc = new Scanner(System.in);
+	public static void createEntry(Statement st,Scanner sc) throws Exception {
 		System.out.println("Enter the id to be created : "); 
 	    int id = sc.nextInt(); 
 		String queryString = "insert into employee values (" + id + ", 'sonal','mandana','sonal.mandana@love.com')";
@@ -36,8 +35,7 @@ public class Type1DriverDemoCRUDApplication {
 	}
 	
 	//Read entire table --- R
-	public static void readTable(Statement st) throws Exception{	
-		Scanner sc = new Scanner(System.in);
+	public static void readTable(Statement st,Scanner sc) throws Exception{	
 		//all the connection and statement were made in main method
 		ResultSet rs = st.executeQuery("select * from employee");
 		System.out.println("Table contains :-- ");
@@ -48,8 +46,7 @@ public class Type1DriverDemoCRUDApplication {
 	}
 	
 	//Update the entry provided ---- U
-	public static void updateEntry(Statement st) throws Exception {
-		Scanner sc = new Scanner(System.in);
+	public static void updateEntry(Statement st,Scanner sc) throws Exception {
 		System.out.println("Enter the id to be updated : "); 
 	    int id = sc.nextInt(); 
 		String queryString = "update employee set email_add = 'abhimanyu.roy400@gmail.com' where id = "+id;
@@ -59,8 +56,7 @@ public class Type1DriverDemoCRUDApplication {
 	}
 	
 	//Delete an entry ---- D
-	public static void deleteEntry(Statement st) throws Exception {
-		Scanner sc = new Scanner(System.in);
+	public static void deleteEntry(Statement st, Scanner sc) throws Exception {
 		System.out.println("Enter the id to be deleted : "); 
 	    int id = sc.nextInt(); 
 		String queryString = "delete from employee where id = " + id;
@@ -74,31 +70,34 @@ public class Type1DriverDemoCRUDApplication {
 //		Class.forName("com.mysql.cj.jdbc.Driver");
 		
 		//Step 3 : establish connection between database and java application
-		String url = "jdbc:mysql://localhost:3306/company";
-		String userName = "root";
-		String pass = "Abhimanyu@97";
+		String url = Authentication.getUrl();
+		String userName = Authentication.getUsername();
+		String pass = Authentication.getPassword();
+		
 		Connection con = DriverManager.getConnection(url,userName,pass);
 		
 		//Step 4 : create statement object
 		Statement st = con.createStatement();
 		int option = 0;
-		Scanner scanner = new Scanner(System.in);
+		Scanner sc = new Scanner(System.in);
 		while(option != 5) {
 			System.out.println("Select the operation to be performed :\n1-create an entry\n2-read the table\n3-update an entry\n4-delete an entry\n5-exit");
-			option = scanner.nextInt();
+			option = sc.nextInt();
 			switch(option) {
-			case 1 : createEntry(st);
+			case 1 : 
+				createEntry(st,sc);
 				break;
 				
-			case 2 : readTable(st);
+			case 2 : 
+				readTable(st,sc);
 				break;
 				
 			case 3 :
-				updateEntry(st);
+				updateEntry(st,sc);
 				break;
 				
 			case 4 :
-				deleteEntry(st);
+				deleteEntry(st,sc);
 				break;
 				
 			case 5 : return;
@@ -106,8 +105,10 @@ public class Type1DriverDemoCRUDApplication {
 			default:System.out.println("Select a valid operation");
 			}
 			
+			
 		}
 		
+		sc.close();
 		//Step 7 : closing the connection
 		con.close();
 		
